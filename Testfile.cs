@@ -1,6 +1,8 @@
-using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-public class ScriptedComp : Monobehaviour {
+public class ScriptedComp : MonoBehaviour {
 	void Start() {
 		
 	}
