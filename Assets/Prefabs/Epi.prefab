@@ -206,8 +206,10 @@ MonoBehaviour:
   runSpeed: 4
   jumpSpeed: 7.5
   jumpCD: 10
+  sprite: {fileID: 8334834988105079663}
   boxSize: {x: 0.75, y: 0.025}
   castDist: 0.50475
   floorLayer:
     serializedVersion: 2
     m_Bits: 128
+  collectedPis: 0

@@ -10,34 +10,46 @@ public class PlayerScript : MonoBehaviour
 	byte jumpCounter = 0;//jump cooldown, para prevenir saltos instantáneos por debajo de plataformas
 	public byte jumpCD = 10;
 	Rigidbody2D rb2D;
+	public SpriteRenderer sprite;
 	
 	//Variables para la detección de piso
 	public Vector2 boxSize;
 	public float castDist;
 	public LayerMask floorLayer;
 	
+	//Pis recolectados
+	public byte collectedPis = 0;
+	
     void Start() {
         rb2D = GetComponent<Rigidbody2D>();
     }
     void Update() {
-        if (Input.GetKey("d") || Input.GetKey("right")) {
+		//moverse a la derecha o izquierda
+		bool moveRight = Input.GetKey("d") || Input.GetKey("right");
+		bool moveLeft = Input.GetKey("a") || Input.GetKey("left");
+        if (moveRight && !moveLeft) {
             rb2D.velocity = new Vector2(runSpeed, rb2D.velocity.y);
         }
-        else if (Input.GetKey("a") || Input.GetKey("left")) {
+        else if (moveLeft && !moveRight) {
             rb2D.velocity = new Vector2(-runSpeed, rb2D.velocity.y);
         }
         else {
             rb2D.velocity = new Vector2(0, rb2D.velocity.y);
         }
-		if ((Input.GetKey("space") || Input.GetKey("up")) && isGrounded() && jumpCounter == 0) {
+		//salto, con una cooldown
+		if ((Input.GetKey("space") || Input.GetKey("up") || Input.GetKey("w")) && isGrounded() && jumpCounter == 0) {
             rb2D.velocity = new Vector2(rb2D.velocity.x, jumpSpeed);
 			jumpCounter = jumpCD;
         }
+		
+		if(rb2D.velocity.x > 0) sprite.flipX = true;
+		if(rb2D.velocity.x < 0) sprite.flipX = false;
     }
 	void FixedUpdate() {
 		if(jumpCounter > 0) jumpCounter--;
 	}
 	public bool isGrounded() {
+		//función de revisión del toque de piso
 		if(Physics2D.BoxCast(transform.position, boxSize, 0, -transform.up, castDist, floorLayer)) {
 			return true;
 		}
@@ -45,5 +57,13 @@ public class PlayerScript : MonoBehaviour
 	}
 	private void OnDrawGizmos() {
 		Gizmos.DrawWireCube(transform.position-transform.up*castDist, boxSize);
+	}
+	
+	private void OnTriggerEnter2D(Collider2D collision) {
+		if(collision.gameObject.CompareTag("Collect")) {
+			collectedPis++;
+			//*Efecto de recolectar pi*
+			Destroy(collision.gameObject, 0f);
+		}
 	}
 }
