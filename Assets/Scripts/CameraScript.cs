@@ -16,10 +16,10 @@ public class CameraScript : MonoBehaviour
 			//posición vertical respecto al jugador
 			float ytrans = toFollow.position.y + 1.5f;
 			//desde -1.0 hasta 3.5
-			if(ytrans > 3.5f) ytrans = 3.5f;
+			if(ytrans > 3.75f) ytrans = 3.75f;
 			if(ytrans < -1f) ytrans = -1f;
 			
-			if(ytrans > -1.5f) {
+			if(ytrans > -1.75f) {
 				cam.orthographicSize = 5+((ytrans+1f)/9f);//desde 5.0 hasta 5.5
 			}
 			else cam.orthographicSize = 5.0f;

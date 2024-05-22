@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class ObjectScript : MonoBehaviour, IPointerClickHandler
 {
-	public byte objID = 0;//0 = square, 1 = book, 2 = pencilcase, 3 = pibook
+	public byte objID = 0;//0 = n/a, 1 = book, 2 = pencilcase, 3 = pibook
     void Start() {
         
     }
