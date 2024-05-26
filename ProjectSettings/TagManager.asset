@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Object
   - Collect
+  - TempChild
   layers:
   - Default
   - TransparentFX

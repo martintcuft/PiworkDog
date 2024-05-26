@@ -19,9 +19,11 @@ public class PlayerScript : MonoBehaviour
 	
 	//Pis recolectados
 	public byte collectedPis = 0;
+	UIScript ui;
 	
     void Start() {
         rb2D = GetComponent<Rigidbody2D>();
+		ui = GameObject.Find("UI").GetComponent<UIScript>();
     }
     void Update() {
 		//moverse a la derecha o izquierda
@@ -50,7 +52,7 @@ public class PlayerScript : MonoBehaviour
 	}
 	public bool isGrounded() {
 		//función de revisión del toque de piso
-		if(Physics2D.BoxCast(transform.position, boxSize, 0, -transform.up, castDist, floorLayer)) {
+		if(Physics2D.BoxCast(transform.position, boxSize, 0, -transform.up, castDist, floorLayer) && rb2D.velocity.y <= 0.25f) {
 			return true;
 		}
 		else return false;
@@ -64,6 +66,7 @@ public class PlayerScript : MonoBehaviour
 			collectedPis++;
 			//*Efecto de recolectar pi*
 			Destroy(collision.gameObject, 0f);
+			ui.UpdatePisDisplayed(collectedPis);
 		}
 	}
 }
