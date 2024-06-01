@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 738172047074567036}
   - component: {fileID: 8334834988105079663}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 4784280646116325083}
   - component: {fileID: 9176183232988986599}
   - component: {fileID: 528370974546588741}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Epi
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -207,9 +207,27 @@ MonoBehaviour:
   jumpSpeed: 7.5
   jumpCD: 10
   sprite: {fileID: 8334834988105079663}
+  spriteFrame: 0
+  animType: 0
+  epiSprites:
+  - {fileID: -296534597, guid: 02cb0c963f7e089419d2b435ebdc01e5, type: 3}
+  - {fileID: 485369520, guid: 02cb0c963f7e089419d2b435ebdc01e5, type: 3}
+  - {fileID: -1192356408, guid: 02cb0c963f7e089419d2b435ebdc01e5, type: 3}
+  - {fileID: -1365135010, guid: 02cb0c963f7e089419d2b435ebdc01e5, type: 3}
+  - {fileID: -1637681606, guid: 02cb0c963f7e089419d2b435ebdc01e5, type: 3}
+  - {fileID: -1135911060, guid: 02cb0c963f7e089419d2b435ebdc01e5, type: 3}
+  - {fileID: -662048027, guid: 02cb0c963f7e089419d2b435ebdc01e5, type: 3}
+  - {fileID: -1984032480, guid: 02cb0c963f7e089419d2b435ebdc01e5, type: 3}
+  - {fileID: -1553414498, guid: 02cb0c963f7e089419d2b435ebdc01e5, type: 3}
+  - {fileID: -106086310, guid: 02cb0c963f7e089419d2b435ebdc01e5, type: 3}
+  - {fileID: -888503913, guid: 02cb0c963f7e089419d2b435ebdc01e5, type: 3}
+  - {fileID: -444829420, guid: 02cb0c963f7e089419d2b435ebdc01e5, type: 3}
   boxSize: {x: 0.75, y: 0.025}
   castDist: 0.50475
   floorLayer:
     serializedVersion: 2
     m_Bits: 128
   collectedPis: 0
+  tearPrefab: {fileID: 8964384421398645581, guid: 3cf99a1f3afb1d04e8cc5b0eca4e93d8, type: 3}
+  tearSpeed: 5
+  tearCD: 15

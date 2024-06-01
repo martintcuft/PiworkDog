@@ -7,11 +7,12 @@ TagManager:
   - Object
   - Collect
   - TempChild
+  - Tear
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
   - 
