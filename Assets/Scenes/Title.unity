@@ -253,7 +253,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4022000717815746999, guid: 1f91735b4d38dd941a79c171ae2df74f, type: 3}
       propertyPath: m_Text
-      value: Key Project Concepts
+      value: Key Project Concepts & Developer
       objectReference: {fileID: 0}
     - target: {fileID: 6767727829124429732, guid: 1f91735b4d38dd941a79c171ae2df74f, type: 3}
       propertyPath: m_Name
@@ -864,6 +864,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 670084155}
   m_CullTransparentMesh: 1
+--- !u!1 &752915924 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2494318867265064404, guid: d84a15f9ce87a61458e498c79b731cf5, type: 3}
+  m_PrefabInstance: {fileID: 829198434645789445}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &776525979
 GameObject:
   m_ObjectHideFlags: 0
@@ -1655,6 +1660,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1243379578}
   m_CullTransparentMesh: 1
+--- !u!1 &1249442399 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2494318867265064404, guid: d84a15f9ce87a61458e498c79b731cf5, type: 3}
+  m_PrefabInstance: {fileID: 1744040020}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1368137598
 GameObject:
   m_ObjectHideFlags: 0
@@ -1738,7 +1748,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 752915924}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
@@ -2065,7 +2075,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4022000717815746999, guid: 1f91735b4d38dd941a79c171ae2df74f, type: 3}
       propertyPath: m_Text
-      value: Scrum master & lead Developer
+      value: Scrum master & Lead Developer
       objectReference: {fileID: 0}
     - target: {fileID: 6767727829124429732, guid: 1f91735b4d38dd941a79c171ae2df74f, type: 3}
       propertyPath: m_Name
@@ -2497,7 +2507,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1249442399}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
