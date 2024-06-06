@@ -134,13 +134,13 @@ public class PlayerScript : MonoBehaviour
 		float adv = Time.deltaTime*6f;
 		switch(animType) {
 			case 0: //idle
-				animCounter = 0f;
 				spriteFrame = 0; 
+				animCounter = 0f;
 			break;
 			case 1: //caminar
 				if(animCounter < 4f) {
-					animCounter += adv*1.5f;
 					spriteFrame = (byte)animCounter;
+					animCounter += adv*1.5f;
 				}
 				else {
 					animCounter = 0f;
@@ -149,8 +149,8 @@ public class PlayerScript : MonoBehaviour
 			break;
 			case 2: //salto
 				if(animCounter < 4f) {
+					spriteFrame = (byte)(animCounter/2f+4);
 					animCounter += adv*1.5f;
-					spriteFrame = (byte)(animCounter/2f+4); 
 				}
 				else {
 					animCounter = 0f;
@@ -160,8 +160,8 @@ public class PlayerScript : MonoBehaviour
 			break;
 			case 3: //caída
 				if(animCounter < 4f) {
+					spriteFrame = (byte)(animCounter/2f+6);
 					animCounter += adv;
-					spriteFrame = (byte)(animCounter/2f+6); 
 				}
 				else {
 					animCounter = 0f;
@@ -170,8 +170,8 @@ public class PlayerScript : MonoBehaviour
 			break;
 			case 4: //disparo de lágrima
 				if(animCounter < 4f) {
-					animCounter += adv;
-					spriteFrame = (byte)(animCounter+8); 
+					spriteFrame = (byte)(animCounter+8);
+					animCounter += adv*1.25f;
 				}
 				else {
 					animCounter = 0f;

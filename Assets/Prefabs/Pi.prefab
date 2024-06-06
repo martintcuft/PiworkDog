@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 356804760947197313}
   - component: {fileID: 2544252403420478957}
+  - component: {fileID: 5169486724285436096}
   m_Layer: 0
   m_Name: Pi
   m_TagString: Collect
@@ -78,6 +79,24 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.9, y: 0.9}
   m_EdgeRadius: 0
+--- !u!114 &5169486724285436096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 658533983283314891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 149e7d0a06ebd0b469ba7f91522fef7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  piSprites:
+  - {fileID: -1977009101, guid: 964d61903773b574d934fc98de1a5670, type: 3}
+  - {fileID: 1940796473, guid: 964d61903773b574d934fc98de1a5670, type: 3}
+  - {fileID: -407331130, guid: 964d61903773b574d934fc98de1a5670, type: 3}
+  - {fileID: 1803117722, guid: 964d61903773b574d934fc98de1a5670, type: 3}
+  piSprite: {fileID: 5470897960585072005}
 --- !u!1 &7383808766572890468
 GameObject:
   m_ObjectHideFlags: 0
@@ -88,8 +107,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1496363021394615416}
   - component: {fileID: 5470897960585072005}
+  - component: {fileID: 2402834416723859260}
   m_Layer: 0
-  m_Name: Square
+  m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -162,3 +182,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!111 &2402834416723859260
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7383808766572890468}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: d6fa72386df4f1549b39b3e89e7e09c0, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: d6fa72386df4f1549b39b3e89e7e09c0, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
