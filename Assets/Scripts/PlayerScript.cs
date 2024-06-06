@@ -182,4 +182,8 @@ public class PlayerScript : MonoBehaviour
 		if(spriteFrame > epiSprites.Length-1) spriteFrame = (byte)(epiSprites.Length-1);
 		sprite.sprite = epiSprites[spriteFrame];
 	}
+	
+	public void HitAndRestartSequence() {//esto debe ejecutarse cuando el jugador es golpeado por el gato
+		
+	}
 }
