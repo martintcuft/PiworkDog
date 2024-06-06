@@ -61,6 +61,12 @@ public class ObjectScript : MonoBehaviour//, IPointerClickHandler
 				}
 			break;
 			case 2: //pencilcase
+				if(!interacted) {
+					interacted = true;
+				}
+				else { 
+					interacted = false;
+				}
 			break;
 			case 3: //pi book
 				if(!interacted) {
@@ -72,22 +78,52 @@ public class ObjectScript : MonoBehaviour//, IPointerClickHandler
 			case 4: //door
 			break;
 		}
+		animCounter = 0f;
 	}
 	
 	public void AnimateObject() {
-		byte spriteFrame = 0;
+		float adv = Time.deltaTime*10f;
 		switch(objID) {
 			case 0: break;
 			case 1: //book
+				if(!interacted && spriteFrame != 0) {
+					SetObjFrameTo((byte)(3+animCounter), 7, 0);
+					animCounter += adv*1.1f;
+				}
+				else if(interacted && spriteFrame != 3) {
+					SetObjFrameTo((byte)(animCounter));
+					animCounter += adv;
+				}
 			break;
 			case 2: //pencilcase
+				if(!interacted && spriteFrame != 8) {
+					SetObjFrameTo((byte)(12+animCounter), 15, 8);
+					animCounter += adv*0.9f;
+				}
+				else if(interacted && spriteFrame != 12) {
+					SetObjFrameTo((byte)(8+animCounter));
+					animCounter += adv*0.9f;
+				}
 			break;
 			case 3: //pi book
+				if(!interacted && spriteFrame != 16) {
+					SetObjFrameTo(16);
+				}
+				else if(interacted && spriteFrame != 19) {
+					SetObjFrameTo((byte)(16+animCounter));
+					animCounter += adv;
+				}
 			break;
-			case 4: break;
+			case 4: //door
+				SetObjFrameTo(20);
+			break;
 		}
 		if(spriteFrame > objSprites.Length-1) spriteFrame = (byte)(objSprites.Length-1);
 		sprite.sprite = objSprites[spriteFrame];
+	}
+	private void SetObjFrameTo(byte toFrame, byte loopWhen = 20, byte loopTo = 0) {
+		if(toFrame > spriteFrame) spriteFrame = toFrame;
+		if(spriteFrame > loopWhen) spriteFrame = loopTo;
 	}
 }
 
