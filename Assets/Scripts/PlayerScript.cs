@@ -33,6 +33,12 @@ public class PlayerScript : MonoBehaviour
 	byte tearCounter = 0;//jump cooldown, para prevenir saltos instantáneos por debajo de plataformas
 	public byte tearCD = 15;
 	
+	//Particle System
+	[SerializeField] Transform particle_trans;
+	[SerializeField] ParticleSystem walk_dust;
+	[SerializeField] ParticleSystem jump_dust;
+	[SerializeField] ParticleSystem pi_dust2;
+	
     void Start() {
         rb2D = GetComponent<Rigidbody2D>();
 		ui = GameObject.Find("UI").GetComponent<UIScript>();
@@ -88,6 +94,7 @@ public class PlayerScript : MonoBehaviour
 		if(rb2D.velocity.x < 0) sprite.flipX = false;
 		UpdateAnimateEpi();
     }
+	
 	void FixedUpdate() {
 		if(jumpCounter > 0) jumpCounter--;
 		if(tearCounter > 0) tearCounter--;
@@ -106,7 +113,7 @@ public class PlayerScript : MonoBehaviour
 	private void OnTriggerEnter2D(Collider2D collision) {
 		if(collision.gameObject.CompareTag("Collect")) {
 			collectedPis++;
-			//*Efecto de recolectar pi*
+			pi_dust2.Play();
 			Destroy(collision.gameObject, 0f);
 			ui.UpdatePisDisplayed(collectedPis);
 		}
@@ -132,12 +139,13 @@ public class PlayerScript : MonoBehaviour
 	}
 	public void UpdateAnimateEpi() {//ejecuta la elección del frame según la ID de animación
 		float adv = Time.deltaTime*6f;
+		byte oldFrame = spriteFrame;
 		switch(animType) {
-			case 0: //idle
+			case 0: //idle 0
 				spriteFrame = 0; 
 				animCounter = 0f;
 			break;
-			case 1: //caminar
+			case 1: //caminar 0, 1, 2, 3
 				if(animCounter < 4f) {
 					spriteFrame = (byte)animCounter;
 					animCounter += adv*1.5f;
@@ -147,7 +155,7 @@ public class PlayerScript : MonoBehaviour
 					animType = 0;
 				}
 			break;
-			case 2: //salto
+			case 2: //salto 4, 5
 				if(animCounter < 4f) {
 					spriteFrame = (byte)(animCounter/2f+4);
 					animCounter += adv*1.5f;
@@ -158,7 +166,7 @@ public class PlayerScript : MonoBehaviour
 				}
 				
 			break;
-			case 3: //caída
+			case 3: //caída 6, 7
 				if(animCounter < 4f) {
 					spriteFrame = (byte)(animCounter/2f+6);
 					animCounter += adv;
@@ -168,7 +176,7 @@ public class PlayerScript : MonoBehaviour
 					animType = 0;
 				}
 			break;
-			case 4: //disparo de lágrima
+			case 4: //disparo de lágrima 8, 9, 10, 11
 				if(animCounter < 4f) {
 					spriteFrame = (byte)(animCounter+8);
 					animCounter += adv*1.25f;
@@ -181,9 +189,22 @@ public class PlayerScript : MonoBehaviour
 		}
 		if(spriteFrame > epiSprites.Length-1) spriteFrame = (byte)(epiSprites.Length-1);
 		sprite.sprite = epiSprites[spriteFrame];
+		
+		if(oldFrame != spriteFrame) UpdateParticles((oldFrame == 6 || oldFrame == 7) && (spriteFrame != 6 && spriteFrame != 7));
 	}
 	
 	public void HitAndRestartSequence() {//esto debe ejecutarse cuando el jugador es golpeado por el gato
 		
+	}
+	
+	public void UpdateParticles(bool fell) {
+		if(fell) {
+			jump_dust.Play();
+		}
+		else if(animType == 1) {
+			walk_dust.Play();
+		}
+		if(sprite.flipX) particle_trans.rotation = new Quaternion(0f, 90f, 0f, 0f);
+		else particle_trans.rotation = new Quaternion(0f, 0f, 0f, 0f);
 	}
 }

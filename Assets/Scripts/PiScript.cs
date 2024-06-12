@@ -7,9 +7,12 @@ public class PiScript : MonoBehaviour
 	public Sprite[] piSprites;
 	public SpriteRenderer piSprite;
 	float animCounter = 0f;
-    void Update()
-    {
-		byte spriteFrame = 0;
+	byte spriteFrame = 0;
+	
+	[SerializeField] ParticleSystem pi_dust;
+	
+    void Update() {
+		byte oldFrame = spriteFrame;
         animCounter += Time.deltaTime;
 		if(animCounter < 4f) {
 			spriteFrame = (byte)animCounter;
@@ -17,7 +20,9 @@ public class PiScript : MonoBehaviour
 		else {
 			animCounter -= 4f;
 		}
+		
 		piSprite.sprite = piSprites[spriteFrame];
+		if(oldFrame != spriteFrame) pi_dust.Play();
     }
 }
 //when the pi

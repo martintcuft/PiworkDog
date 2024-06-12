@@ -17,6 +17,7 @@ public class ObjectScript : MonoBehaviour//, IPointerClickHandler
 	
 	bool shouldBeSolid = false;//usado para que epi no atraviese el piso si pone de pie un libro mientras este parado en él
 	public bool interacted = false;//si el objeto fué interacuado o no (ej: de pie || botado)
+	public GameObject piPrefab;
 	
 	//Máscaras de capas cuando el objeto es tangible y cuando no
 	[SerializeField] private LayerMask excludeSolidLayers;
@@ -62,9 +63,17 @@ public class ObjectScript : MonoBehaviour//, IPointerClickHandler
 			break;
 			case 2: //pencilcase
 				if(!interacted) {
+					Invoke("ActivateTempChildren", 0.5f);
+					//*Play pencil effect*
 					interacted = true;
 				}
-				else { 
+				else {
+					for(int i = 0; i < transform.childCount; i++) {
+						if(transform.GetChild(i).tag == "TempChild") {
+							transform.GetChild(i).gameObject.SetActive(false);
+						}
+					}
+					//*Play pencil effect*
 					interacted = false;
 				}
 			break;
@@ -72,13 +81,22 @@ public class ObjectScript : MonoBehaviour//, IPointerClickHandler
 				if(!interacted) {
 					transform.GetChild(0).gameObject.layer = 0;
 					collider.excludeLayers = excludePassLayers;
+					Instantiate(piPrefab, new Vector3(transform.position.x, transform.position.y + 0.5f, 0), new Quaternion(0f, 0f, 0f, 0f));
 					interacted = true;
+					Destroy(gameObject, 0.25f);
 				}
 			break;
 			case 4: //door
 			break;
 		}
 		animCounter = 0f;
+	}
+	private void ActivateTempChildren() {
+		for(int i = 0; i < transform.childCount; i++) {
+			if(transform.GetChild(i).tag == "TempChild") {
+				transform.GetChild(i).gameObject.SetActive(true);
+			}
+		}
 	}
 	
 	public void AnimateObject() {
