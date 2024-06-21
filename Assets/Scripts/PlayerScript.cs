@@ -39,6 +39,10 @@ public class PlayerScript : MonoBehaviour
 	[SerializeField] ParticleSystem jump_dust;
 	[SerializeField] ParticleSystem pi_dust2;
 	
+	//Sounds
+	public AudioClip[] epi_sfx;
+	public AudioSource audioPlayer;
+	
     void Start() {
         rb2D = GetComponent<Rigidbody2D>();
 		ui = GameObject.Find("UI").GetComponent<UIScript>();
@@ -63,6 +67,7 @@ public class PlayerScript : MonoBehaviour
 		if ((Input.GetKey("space") || Input.GetKey("up") || Input.GetKey("w")) && jumpCounter == 0 && isGrounded() && rb2D.velocity.y <= 0.25f) {
             rb2D.velocity = new Vector2(rb2D.velocity.x, jumpSpeed);
 			jumpCounter = jumpCD;
+			audioPlayer.clip = epi_sfx[2]; audioPlayer.Play();
 			AnimateEpi(2);
         }
 		if(rb2D.velocity.y < 0.25f && !isGrounded()) {
@@ -114,6 +119,7 @@ public class PlayerScript : MonoBehaviour
 		if(collision.gameObject.CompareTag("Collect")) {
 			collectedPis++;
 			pi_dust2.Play();
+			audioPlayer.clip = epi_sfx[4]; audioPlayer.Play();
 			Destroy(collision.gameObject, 0f);
 			ui.UpdatePisDisplayed(collectedPis);
 		}
@@ -190,7 +196,10 @@ public class PlayerScript : MonoBehaviour
 		if(spriteFrame > epiSprites.Length-1) spriteFrame = (byte)(epiSprites.Length-1);
 		sprite.sprite = epiSprites[spriteFrame];
 		
-		if(oldFrame != spriteFrame) UpdateParticles((oldFrame == 6 || oldFrame == 7) && (spriteFrame != 6 && spriteFrame != 7));
+		if(oldFrame != spriteFrame) {
+			UpdateParticles((oldFrame == 6 || oldFrame == 7) && (spriteFrame != 6 && spriteFrame != 7));
+			if(animType == 1 && spriteFrame % 3 == 0) { audioPlayer.clip = epi_sfx[0]; audioPlayer.Play(); }
+		}
 	}
 	
 	public void HitAndRestartSequence() {//esto debe ejecutarse cuando el jugador es golpeado por el gato
@@ -200,6 +209,7 @@ public class PlayerScript : MonoBehaviour
 	public void UpdateParticles(bool fell) {
 		if(fell) {
 			jump_dust.Play();
+			audioPlayer.clip = epi_sfx[3]; audioPlayer.Play();
 		}
 		else if(animType == 1) {
 			walk_dust.Play();
