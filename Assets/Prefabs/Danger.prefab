@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7954958186916683003}
   - component: {fileID: 4795903271393516923}
-  m_Layer: 0
+  - component: {fileID: 5464223535859917006}
+  m_Layer: 8
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -84,6 +85,51 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!61 &5464223535859917006
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1420599525329974857}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: -0.48}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 2, y: 2}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1.11, y: 1}
+  m_EdgeRadius: 0
 --- !u!1 &8388888993351651581
 GameObject:
   m_ObjectHideFlags: 0
@@ -96,7 +142,7 @@ GameObject:
   - component: {fileID: 8982703546356268076}
   - component: {fileID: 8143065181772115524}
   - component: {fileID: 5968707823217209740}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Danger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -145,7 +191,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!61 &8143065181772115524
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -203,3 +249,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ca1bb93cd0ed684cab34d3c8656321b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dangerID: 0
+  collider: {fileID: 8143065181772115524}
+  moveSpeed: 1
+  sprite: {fileID: 4795903271393516923}
+  spriteFrame: 0
+  animCounter: 0
+  otherAnim: 0
+  dangerSprites:
+  - {fileID: 167829707, guid: f3d05f97d2778a84db1d935aa5413bb5, type: 3}
+  - {fileID: 729499166, guid: 4dd4e7d7b27b76c40a3bcc02f893dcde, type: 3}
+  - {fileID: -1332540883, guid: 4dd4e7d7b27b76c40a3bcc02f893dcde, type: 3}
+  - {fileID: 1322709436, guid: 4dd4e7d7b27b76c40a3bcc02f893dcde, type: 3}
+  - {fileID: -504433621, guid: 4dd4e7d7b27b76c40a3bcc02f893dcde, type: 3}
+  - {fileID: 1714089730, guid: 4dd4e7d7b27b76c40a3bcc02f893dcde, type: 3}
+  - {fileID: -823974359, guid: 4dd4e7d7b27b76c40a3bcc02f893dcde, type: 3}
+  - {fileID: -817819963, guid: 4dd4e7d7b27b76c40a3bcc02f893dcde, type: 3}
+  - {fileID: -1946441971, guid: 4dd4e7d7b27b76c40a3bcc02f893dcde, type: 3}

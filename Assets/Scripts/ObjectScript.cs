@@ -12,7 +12,7 @@ public class ObjectScript : MonoBehaviour//, IPointerClickHandler
 	//Animación de objeto
 	public SpriteRenderer sprite;
 	public byte spriteFrame = 0;
-	float animCounter = 0f;
+	[SerializeField] float animCounter = 0f;
 	public Sprite[] objSprites;
 	
 	bool shouldBeSolid = false;//usado para que epi no atraviese el piso si pone de pie un libro mientras este parado en él
@@ -22,6 +22,16 @@ public class ObjectScript : MonoBehaviour//, IPointerClickHandler
 	//Máscaras de capas cuando el objeto es tangible y cuando no
 	[SerializeField] private LayerMask excludeSolidLayers;
 	[SerializeField] private LayerMask excludePassLayers;
+	
+	//Particle System
+	private byte dustType = 254;
+	[SerializeField] ParticleSystem book_dust;
+	[SerializeField] ParticleSystem pencil_dust;
+	[SerializeField] ParticleSystem pibook_dust;
+	
+	//Sounds
+	public AudioClip[] obj_sfx;
+	public AudioSource audioPlayer;
 	
     void Start() {
         //set corresponding sprite
@@ -43,8 +53,18 @@ public class ObjectScript : MonoBehaviour//, IPointerClickHandler
 	/*public void OnPointerClick(PointerEventData eventData) {//Ocurre cuando el objecto recibe un click
 		Debug.Log("Clicked object type: " + objID);//Envía un mensaje en la consola de testeo
 	}*/
+	private void PlayDustEffect() {
+		switch(dustType) {
+			case 0: book_dust.Play(); break;
+			case 1: pencil_dust.Play(); break;
+			case 2: pibook_dust.Play(); break;
+			default: break;
+		}
+	}
 	public void OnTearContact() {//Se debe ejecutar cuando una lágrima choca con un objecto que tenga la tag "Object" y/o el script "ObjectScript"
 		Debug.Log("Tear hit object type: " + objID);
+		animCounter = 0f;
+		if(!interacted)spriteFrame = 0;
 		switch(objID) {
 			case 0: break;
 			case 1: //book
@@ -60,12 +80,15 @@ public class ObjectScript : MonoBehaviour//, IPointerClickHandler
 					//collider.excludeLayers = excludeSolidLayers;//epi will clip outbounds
 					interacted = false;
 				}
+				dustType = 0; Invoke("PlayDustEffect", 0.3f);
+				audioPlayer.PlayOneShot(obj_sfx[0]);
 			break;
 			case 2: //pencilcase
+				dustType = 1;
 				if(!interacted) {
 					Invoke("ActivateTempChildren", 0.5f);
 					//*Play pencil effect*
-					interacted = true;
+					interacted = true; Invoke("PlayDustEffect", 0.2f);
 				}
 				else {
 					for(int i = 0; i < transform.childCount; i++) {
@@ -74,8 +97,9 @@ public class ObjectScript : MonoBehaviour//, IPointerClickHandler
 						}
 					}
 					//*Play pencil effect*
-					interacted = false;
+					interacted = false; PlayDustEffect();
 				}
+				audioPlayer.PlayOneShot(obj_sfx[1]);
 			break;
 			case 3: //pi book
 				if(!interacted) {
@@ -83,13 +107,13 @@ public class ObjectScript : MonoBehaviour//, IPointerClickHandler
 					collider.excludeLayers = excludePassLayers;
 					Instantiate(piPrefab, new Vector3(transform.position.x, transform.position.y + 0.5f, 0), new Quaternion(0f, 0f, 0f, 0f));
 					interacted = true;
-					Destroy(gameObject, 0.25f);
+					Destroy(gameObject, 0.5f);
 				}
+				dustType = 2; PlayDustEffect();
 			break;
 			case 4: //door
 			break;
 		}
-		animCounter = 0f;
 	}
 	private void ActivateTempChildren() {
 		for(int i = 0; i < transform.childCount; i++) {
@@ -108,9 +132,12 @@ public class ObjectScript : MonoBehaviour//, IPointerClickHandler
 					SetObjFrameTo((byte)(3+animCounter), 7, 0);
 					animCounter += adv*1.1f;
 				}
-				else if(interacted && spriteFrame != 3) {
-					SetObjFrameTo((byte)(animCounter));
-					animCounter += adv;
+				else if(interacted) {
+					if(spriteFrame < 3) {
+						SetObjFrameTo((byte)(animCounter), 7);
+						animCounter += adv;
+					}
+					else spriteFrame = 3;
 				}
 			break;
 			case 2: //pencilcase
@@ -118,18 +145,24 @@ public class ObjectScript : MonoBehaviour//, IPointerClickHandler
 					SetObjFrameTo((byte)(12+animCounter), 15, 8);
 					animCounter += adv*0.9f;
 				}
-				else if(interacted && spriteFrame != 12) {
-					SetObjFrameTo((byte)(8+animCounter));
-					animCounter += adv*0.9f;
+				else if(interacted) {
+					if(spriteFrame < 12) {
+						SetObjFrameTo((byte)(8+animCounter), 15);
+						animCounter += adv*0.9f;
+					}
+					else spriteFrame = 12;
 				}
 			break;
 			case 3: //pi book
 				if(!interacted && spriteFrame != 16) {
 					SetObjFrameTo(16);
 				}
-				else if(interacted && spriteFrame != 19) {
-					SetObjFrameTo((byte)(16+animCounter));
-					animCounter += adv;
+				else if(interacted) {
+					if(spriteFrame < 19) {
+						SetObjFrameTo((byte)(16+animCounter));
+						animCounter += adv;
+					}
+					else spriteFrame = 19;
 				}
 			break;
 			case 4: //door

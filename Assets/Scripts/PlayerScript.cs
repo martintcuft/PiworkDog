@@ -10,6 +10,8 @@ public class PlayerScript : MonoBehaviour
 	byte jumpCounter = 0;//jump cooldown, para prevenir saltos instantáneos por debajo de plataformas
 	public byte jumpCD = 10;
 	Rigidbody2D rb2D;
+	BoxCollider2D epi_hitbox;
+	public Transform RespawnPoint;
 	
 	//Sprite y animación por frames
 	public SpriteRenderer sprite;
@@ -38,6 +40,8 @@ public class PlayerScript : MonoBehaviour
 	[SerializeField] ParticleSystem walk_dust;
 	[SerializeField] ParticleSystem jump_dust;
 	[SerializeField] ParticleSystem pi_dust2;
+	[SerializeField] ParticleSystem epi_blood;
+	[SerializeField] ParticleSystem epi_death;
 	
 	//Sounds
 	public AudioClip[] epi_sfx;
@@ -45,9 +49,11 @@ public class PlayerScript : MonoBehaviour
 	
     void Start() {
         rb2D = GetComponent<Rigidbody2D>();
+        epi_hitbox = GetComponent<BoxCollider2D>();
 		ui = GameObject.Find("UI").GetComponent<UIScript>();
     }
     void Update() {
+		if(!rb2D.simulated) return;
 		//moverse a la derecha o izquierda
 		bool moveRight = Input.GetKey("d") || Input.GetKey("right");
 		bool moveLeft = Input.GetKey("a") || Input.GetKey("left");
@@ -67,7 +73,7 @@ public class PlayerScript : MonoBehaviour
 		if ((Input.GetKey("space") || Input.GetKey("up") || Input.GetKey("w")) && jumpCounter == 0 && isGrounded() && rb2D.velocity.y <= 0.25f) {
             rb2D.velocity = new Vector2(rb2D.velocity.x, jumpSpeed);
 			jumpCounter = jumpCD;
-			audioPlayer.clip = epi_sfx[2]; audioPlayer.Play();
+			audioPlayer.PlayOneShot(epi_sfx[2]);
 			AnimateEpi(2);
         }
 		if(rb2D.velocity.y < 0.25f && !isGrounded()) {
@@ -84,6 +90,7 @@ public class PlayerScript : MonoBehaviour
 				Vector2 toShootTo = moddedPosition - new Vector2(transform.position.x, transform.position.y);
 				toShootTo.Normalize();
                 InstantiateTear(toShootTo * tearSpeed);
+				audioPlayer.PlayOneShot(epi_sfx[5]);
 				
 				if(toShootTo.x > 0) sprite.flipX = true;
 				if(toShootTo.x < 0) sprite.flipX = false;
@@ -94,6 +101,7 @@ public class PlayerScript : MonoBehaviour
             }
         }
 		
+		if(transform.position.y < -10f) transform.position = RespawnPoint.position;
 		//girar el sprite según dirección
 		if(rb2D.velocity.x > 0) sprite.flipX = true;
 		if(rb2D.velocity.x < 0) sprite.flipX = false;
@@ -116,13 +124,19 @@ public class PlayerScript : MonoBehaviour
 	}
 	
 	private void OnTriggerEnter2D(Collider2D collision) {
+		//recolectar PI
 		if(collision.gameObject.CompareTag("Collect")) {
 			collectedPis++;
 			pi_dust2.Play();
-			audioPlayer.clip = epi_sfx[4]; audioPlayer.Play();
+			audioPlayer.PlayOneShot(epi_sfx[4]);
 			Destroy(collision.gameObject, 0f);
 			ui.UpdatePisDisplayed(collectedPis);
 		}
+		//being hit
+		if (collision.gameObject.layer == 8) {
+			collision.transform.parent.gameObject.GetComponent<DangerScript>().JustHitPlayer();
+            HitAndRestartSequence();
+        }
 	}
 	
 	//función de creación y disparo de lágrima
@@ -198,18 +212,31 @@ public class PlayerScript : MonoBehaviour
 		
 		if(oldFrame != spriteFrame) {
 			UpdateParticles((oldFrame == 6 || oldFrame == 7) && (spriteFrame != 6 && spriteFrame != 7));
-			if(animType == 1 && spriteFrame % 3 == 0) { audioPlayer.clip = epi_sfx[0]; audioPlayer.Play(); }
+			if(animType == 1 && spriteFrame == 1) { audioPlayer.PlayOneShot(epi_sfx[0]); }//spriteFrame % 3 == 0 && spriteFrame != 3
 		}
 	}
 	
 	public void HitAndRestartSequence() {//esto debe ejecutarse cuando el jugador es golpeado por el gato
-		
+		Debug.Log("Owie");
+		epi_blood.Play();
+		epi_hitbox.enabled = rb2D.simulated = false;
+		sprite.sprite = epiSprites[6];
+		Invoke("DeathAnim", 1f);
+	}
+	private void DeathAnim() {
+		epi_death.Play();
+		sprite.enabled = false;
+		Invoke("Respawn", 2f);
+	}
+	public void Respawn() {
+		epi_hitbox.enabled = rb2D.simulated = sprite.enabled = true;
+		transform.position = RespawnPoint.position;
 	}
 	
 	public void UpdateParticles(bool fell) {
 		if(fell) {
 			jump_dust.Play();
-			audioPlayer.clip = epi_sfx[3]; audioPlayer.Play();
+			audioPlayer.PlayOneShot(epi_sfx[3]);
 		}
 		else if(animType == 1) {
 			walk_dust.Play();
