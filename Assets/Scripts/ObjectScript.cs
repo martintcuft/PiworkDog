@@ -107,9 +107,10 @@ public class ObjectScript : MonoBehaviour//, IPointerClickHandler
 					collider.excludeLayers = excludePassLayers;
 					Instantiate(piPrefab, new Vector3(transform.position.x, transform.position.y + 0.5f, 0), new Quaternion(0f, 0f, 0f, 0f));
 					interacted = true;
-					Destroy(gameObject, 0.5f);
+					Destroy(gameObject, 1f);
 				}
 				dustType = 2; PlayDustEffect();
+				audioPlayer.PlayOneShot(obj_sfx[2]);
 			break;
 			case 4: //door
 			break;

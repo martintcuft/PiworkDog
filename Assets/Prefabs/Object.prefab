@@ -243,13 +243,14 @@ MonoBehaviour:
     m_Bits: 0
   excludePassLayers:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 264
   book_dust: {fileID: 7765200640093220884}
   pencil_dust: {fileID: 3679109660679486887}
   pibook_dust: {fileID: 2788626829454921890}
   obj_sfx:
   - {fileID: 8300000, guid: 4b1c82d85cf6a7147b2776d03e8e2baf, type: 3}
   - {fileID: 8300000, guid: 41e5be544fd9d0f4ca4a0c3d588c2d43, type: 3}
+  - {fileID: 8300000, guid: e403fad4c54977b4ca4128301a85c375, type: 3}
   audioPlayer: {fileID: 7456472390757151669}
 --- !u!82 &7456472390757151669
 AudioSource:
@@ -307,7 +308,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 0.75
       inSlope: 0
       outSlope: 0
       tangentMode: 0

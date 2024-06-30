@@ -39,6 +39,7 @@ public class PlayerScript : MonoBehaviour
 	[SerializeField] Transform particle_trans;
 	[SerializeField] ParticleSystem walk_dust;
 	[SerializeField] ParticleSystem jump_dust;
+	[SerializeField] ParticleSystem land_dust;
 	[SerializeField] ParticleSystem pi_dust2;
 	[SerializeField] ParticleSystem epi_blood;
 	[SerializeField] ParticleSystem epi_death;
@@ -46,6 +47,7 @@ public class PlayerScript : MonoBehaviour
 	//Sounds
 	public AudioClip[] epi_sfx;
 	public AudioSource audioPlayer;
+	public AudioSource piAudioPlayer;
 	
     void Start() {
         rb2D = GetComponent<Rigidbody2D>();
@@ -72,6 +74,7 @@ public class PlayerScript : MonoBehaviour
 		//salto, con una cooldown
 		if ((Input.GetKey("space") || Input.GetKey("up") || Input.GetKey("w")) && jumpCounter == 0 && isGrounded() && rb2D.velocity.y <= 0.25f) {
             rb2D.velocity = new Vector2(rb2D.velocity.x, jumpSpeed);
+			jump_dust.Play();
 			jumpCounter = jumpCD;
 			audioPlayer.PlayOneShot(epi_sfx[2]);
 			AnimateEpi(2);
@@ -126,9 +129,11 @@ public class PlayerScript : MonoBehaviour
 	private void OnTriggerEnter2D(Collider2D collision) {
 		//recolectar PI
 		if(collision.gameObject.CompareTag("Collect")) {
+			piAudioPlayer.pitch = 1f + collectedPis/8f;
 			collectedPis++;
 			pi_dust2.Play();
-			audioPlayer.PlayOneShot(epi_sfx[4]);
+			//audioPlayer.PlayOneShot(epi_sfx[4]);//was pi collect sfx, now is bark
+			piAudioPlayer.Play();
 			Destroy(collision.gameObject, 0f);
 			ui.UpdatePisDisplayed(collectedPis);
 		}
@@ -221,21 +226,26 @@ public class PlayerScript : MonoBehaviour
 		epi_blood.Play();
 		epi_hitbox.enabled = rb2D.simulated = false;
 		sprite.sprite = epiSprites[6];
-		Invoke("DeathAnim", 1f);
+		audioPlayer.PlayOneShot(epi_sfx[6]);
+		Time.timeScale = (Time.timeScale + 0.5f)/2f;
+		Invoke("DeathAnim", 0.5f);
 	}
 	private void DeathAnim() {
 		epi_death.Play();
+		audioPlayer.PlayOneShot(epi_sfx[7]);
 		sprite.enabled = false;
+		Time.timeScale = 1f;
 		Invoke("Respawn", 2f);
 	}
 	public void Respawn() {
+		audioPlayer.PlayOneShot(epi_sfx[4]);
 		epi_hitbox.enabled = rb2D.simulated = sprite.enabled = true;
 		transform.position = RespawnPoint.position;
 	}
 	
 	public void UpdateParticles(bool fell) {
 		if(fell) {
-			jump_dust.Play();
+			land_dust.Play();
 			audioPlayer.PlayOneShot(epi_sfx[3]);
 		}
 		else if(animType == 1) {

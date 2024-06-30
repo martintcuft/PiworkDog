@@ -8,6 +8,8 @@ public class SpawnerScript : MonoBehaviour
 	public float spawnEvery = 2f;
 	[SerializeField] float counter = 0f;
 	[SerializeField] bool onSpawn_flip = false;
+	public AudioSource audioPlayer;
+	
     void Start() {
         
     }
@@ -15,8 +17,9 @@ public class SpawnerScript : MonoBehaviour
     void Update() {
         counter += Time.deltaTime;
 		if(counter >= spawnEvery) {
-			counter -= spawnEvery;
 			Instantiate(prefab, transform.position, new Quaternion(0f, 0f, 0f, 0f)).GetComponent<DangerScript>().sprite.flipX = onSpawn_flip;
+			audioPlayer.Play();
+			counter -= spawnEvery;
 		}
     }
 }

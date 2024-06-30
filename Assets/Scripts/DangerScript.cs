@@ -16,6 +16,14 @@ public class DangerScript : MonoBehaviour
 	public bool otherAnim = false;
 	public Sprite[] dangerSprites;
 	
+	//Particle System
+	[SerializeField] Transform particle_trans;
+	[SerializeField] ParticleSystem walk_dust;
+	
+	//Sounds
+	public AudioClip[] danger_sfx;
+	public AudioSource audioPlayer;
+	
     void Start() {
 		rb2D = GetComponent<Rigidbody2D>();
         switch(dangerID) {
@@ -40,10 +48,10 @@ public class DangerScript : MonoBehaviour
         }
     }*/
 	private void OnTriggerEnter2D(Collider2D collision) {
-		//detect collision with despawn point
+		//detect collision with despawn point on 2nd window
 		if (collision.gameObject.name == "Cat_Exit") {
-			//*despawn*
-			Debug.Log("Catdestruction");
+			//Debug.Log("Cat left");
+			audioPlayer.PlayOneShot(danger_sfx[1]);
 			Destroy(gameObject, 0.25f);
         }
 	}
@@ -51,10 +59,11 @@ public class DangerScript : MonoBehaviour
 	public void JustHitPlayer() {
 		otherAnim = true;
 		animCounter = 0f;
-		rb2D.velocity = Vector2.zero;
+		rb2D.velocity = new Vector2(0f, 1f);
 	}
 	
 	public void AnimateDanger() {
+		byte oldFrame = spriteFrame;
 		float adv = Time.deltaTime*10f;
 		switch(dangerID) {
 			case 0: break;
@@ -73,6 +82,10 @@ public class DangerScript : MonoBehaviour
 						animCounter = 0f;
 						otherAnim = false;
 					}
+				}
+				if(oldFrame != spriteFrame && spriteFrame == 1) {
+					audioPlayer.PlayOneShot(danger_sfx[0]);
+					walk_dust.Play();
 				}
 			break;
 		}
