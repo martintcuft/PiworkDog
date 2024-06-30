@@ -6,6 +6,7 @@ public class SpawnerScript : MonoBehaviour
 {
 	public GameObject prefab;
 	public float spawnEvery = 2f;
+	public bool silentSpawns = false;
 	[SerializeField] float counter = 0f;
 	[SerializeField] bool onSpawn_flip = false;
 	public AudioSource audioPlayer;
@@ -17,8 +18,9 @@ public class SpawnerScript : MonoBehaviour
     void Update() {
         counter += Time.deltaTime;
 		if(counter >= spawnEvery) {
-			Instantiate(prefab, transform.position, new Quaternion(0f, 0f, 0f, 0f)).GetComponent<DangerScript>().sprite.flipX = onSpawn_flip;
-			audioPlayer.Play();
+			GameObject theThing = Instantiate(prefab, transform.position, new Quaternion(0f, 0f, 0f, 0f));
+			if(theThing.GetComponent<DangerScript>() != null) theThing.GetComponent<DangerScript>().sprite.flipX = onSpawn_flip;
+			if(!silentSpawns) audioPlayer.Play();
 			counter -= spawnEvery;
 		}
     }
