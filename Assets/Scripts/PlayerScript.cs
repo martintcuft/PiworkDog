@@ -88,7 +88,7 @@ public class PlayerScript : MonoBehaviour
             Vector2 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(worldPoint, Vector2.zero);
 
-            if (hit.collider != null && hit.collider.CompareTag("Object")) {
+            if (hit.collider != null) {// && hit.collider.CompareTag("Object")
 				Vector2 moddedPosition = new Vector2((int)hit.point.x+(hit.point.x < 0 ? -0.5f : 0.5f), (int)hit.point.y+(hit.point.y < 0 ? -0.5f : 0.5f));
 				Vector2 toShootTo = moddedPosition - new Vector2(transform.position.x, transform.position.y);
 				toShootTo.Normalize();
