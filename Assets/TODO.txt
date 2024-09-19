@@ -1,0 +1,20 @@
+:D (Port to arcade controls + Look & aim up & down)
+:D (Sprite atlas stitch fixes)
+:D (Pause menu & direction navegation)
+
+- Program Door Transition
+- Extended Level size
+- Add secret walls that go transparent when inside secret region
+
+- Add Flower pot, Painting & TV Remote
+- Add Bird w/celling holes for the dungs to go through
+
+- Add Glass & Cutting board
+- Add the Bugs w/ants that follow a set path & the scarab/spider that is contained in the glass
+
+- Add Inflatable & Grill
+- Add Lizards, it's water attack & spawning more when it 'dies', leaving it's tail
+
+- Add Proyector & Trash can
+- Last level is two levels, one of puzzles & one for the 'boss fight'
+- Add the Horse Teacher that attacks with math & chalk

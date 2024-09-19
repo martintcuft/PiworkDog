@@ -8,13 +8,13 @@ public class UIScript : MonoBehaviour
     void Start() {}
     public void UpdatePisDisplayed(byte pis) {
 		if(pis == piTotal) {
-			for(int i = 2; i < transform.childCount; i++) {
+			for(int i = 3; i < transform.childCount; i++) {
 				if(transform.GetChild(i) == null)break;
 				transform.GetChild(i).gameObject.SetActive(true);
 			}
 		}
 		else {
-			for(int i = 2; i < transform.childCount; i++) {
+			for(int i = 3; i < transform.childCount; i++) {
 				if(transform.GetChild(i) == null)break;
 				transform.GetChild(i).gameObject.SetActive(pis > 0);
 				if(pis > 0)pis--;

@@ -16,7 +16,7 @@ public class PlayerScript : MonoBehaviour
 	//Sprite y animación por frames
 	public SpriteRenderer sprite;
 	public byte spriteFrame = 0;
-	public byte animType = 0;
+	public sbyte animType = 0;
 	float animCounter = 0f;
 	public Sprite[] epiSprites;
 	
@@ -24,6 +24,8 @@ public class PlayerScript : MonoBehaviour
 	public Vector2 boxSize;
 	public float castDist;
 	public LayerMask floorLayer;
+	byte coyoteCounter = 0;//counter for coyote time
+	public byte coyoteTime = 7;
 	
 	//Pis recolectados
 	public byte collectedPis = 0;
@@ -32,7 +34,7 @@ public class PlayerScript : MonoBehaviour
 	//Disparo de lágrima
 	public GameObject tearPrefab;
 	public float tearSpeed = 1f;
-	byte tearCounter = 0;//jump cooldown, para prevenir saltos instantáneos por debajo de plataformas
+	byte tearCounter = 0;
 	public byte tearCD = 15;
 	
 	//Particle System
@@ -55,10 +57,10 @@ public class PlayerScript : MonoBehaviour
 		ui = GameObject.Find("UI").GetComponent<UIScript>();
     }
     void Update() {
-		if(!rb2D.simulated) return;
+		if(Time.deltaTime <= 0f || !rb2D.simulated) return;
 		//moverse a la derecha o izquierda
-		bool moveRight = Input.GetKey("d") || Input.GetKey("right");
-		bool moveLeft = Input.GetKey("a") || Input.GetKey("left");
+		bool moveRight = Input.GetAxis("Horizontal") > 0.01;//Input.GetKey("d") || Input.GetKey("right")
+		bool moveLeft = Input.GetAxis("Horizontal") < -0.01;//Input.GetKey("a") || Input.GetKey("left")
         if (moveRight && !moveLeft) {
             rb2D.velocity = new Vector2(runSpeed, rb2D.velocity.y);
 			AnimateEpi(1);
@@ -71,25 +73,42 @@ public class PlayerScript : MonoBehaviour
             rb2D.velocity = new Vector2(0, rb2D.velocity.y);
 			AnimateEpi(0);
         }
+		bool lookUp = Input.GetAxis("Vertical") > 0.01;
+		bool lookDown = Input.GetAxis("Vertical") < -0.01;
+		if(lookUp) AnimateEpi(-1);
+		else if(lookDown) AnimateEpi(-2);
 		//salto, con una cooldown
-		if ((Input.GetKey("space") || Input.GetKey("up") || Input.GetKey("w")) && jumpCounter == 0 && isGrounded() && rb2D.velocity.y <= 0.25f) {
+		if ((Input.GetButtonDown("Jump") || Input.GetButtonDown("White")) && jumpCounter == 0 && isGrounded() && rb2D.velocity.y <= 0.25f) { //Input.GetKey("space") || Input.GetKey("up") || Input.GetKey("w")
             rb2D.velocity = new Vector2(rb2D.velocity.x, jumpSpeed);
 			jump_dust.Play();
 			jumpCounter = jumpCD;
 			audioPlayer.PlayOneShot(epi_sfx[2]);
-			AnimateEpi(2);
+			AnimateEpi(2);//animate jump up
         }
-		if(rb2D.velocity.y < 0.25f && !isGrounded()) {
-			AnimateEpi(3);
+		if(rb2D.velocity.y < 0.33f && !isGrounded()) {//0.25f
+			AnimateEpi(3);//animate fall
 		}
 		
+		bool tearButton1 = Input.GetMouseButtonDown(0);
+		bool tearButton2 = Input.GetButtonDown("Blue");
 		//disparo de lágrima
-		if (Input.GetMouseButtonDown(0) && tearCounter == 0) {
+		if ((tearButton1 || tearButton2) && tearCounter == 0) {
             Vector2 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(worldPoint, Vector2.zero);
-
-            if (hit.collider != null) {// && hit.collider.CompareTag("Object")
-				Vector2 moddedPosition = new Vector2((int)hit.point.x+(hit.point.x < 0 ? -0.5f : 0.5f), (int)hit.point.y+(hit.point.y < 0 ? -0.5f : 0.5f));
+			if(tearButton1) worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+			else if(tearButton2) {
+				worldPoint = new Vector2(transform.position.x, transform.position.y);
+				
+				Vector2 shootToButtons = Vector2.right*(sprite.flipX ? 1 : -1);
+				if(lookUp) shootToButtons.y += 2;
+				else if(lookDown) shootToButtons.y -= 2;
+				else shootToButtons *= 2;
+				worldPoint += shootToButtons;
+			}
+            //RaycastHit2D hit = Physics2D.Raycast(worldPoint, Vector2.zero);
+			
+            if (worldPoint != new Vector2(transform.position.x, transform.position.y)) {// && hit.collider.CompareTag("Object"), hit.collider != null
+				//Vector2 moddedPosition = new Vector2((int)hit.point.x+(hit.point.x < 0 ? -0.5f : 0.5f), (int)hit.point.y+(hit.point.y < 0 ? -0.5f : 0.5f));
+				Vector2 moddedPosition = new Vector2((int)worldPoint.x+(worldPoint.x < 0 ? -0.5f : 0.5f), (int)worldPoint.y+(worldPoint.y < 0 ? -0.5f : 0.5f));
 				Vector2 toShootTo = moddedPosition - new Vector2(transform.position.x, transform.position.y);
 				toShootTo.Normalize();
                 InstantiateTear(toShootTo * tearSpeed);
@@ -114,10 +133,13 @@ public class PlayerScript : MonoBehaviour
 	void FixedUpdate() {
 		if(jumpCounter > 0) jumpCounter--;
 		if(tearCounter > 0) tearCounter--;
+		if(coyoteCounter > 0) coyoteCounter--;
 	}
 	public bool isGrounded() {
 		//función de revisión del toque de piso
+		if(coyoteCounter > 0) return true;
 		if(Physics2D.BoxCast(transform.position, boxSize, 0, -transform.up, castDist, floorLayer)) {
+			coyoteCounter = coyoteTime;
 			return true;
 		}
 		else return false;
@@ -151,11 +173,13 @@ public class PlayerScript : MonoBehaviour
         //tear.AddComponent<Tear>();
     }
 	
-	public void AnimateEpi(byte tryAnimID) {//decide qué ID de animación colocar
-		if(	animType == 2 && tryAnimID == 3 || 
+	public void AnimateEpi(sbyte tryAnimID) {//decide qué ID de animación colocar
+		if (animType == 2 && tryAnimID == 3 || 
 			animType == 3 || tryAnimID == 4 || 
 			animType == 1 && tryAnimID == 0 || 
 			tryAnimID == 2 || 
+			animType == 0 && tryAnimID == -1 ||
+			animType == 0 && tryAnimID == -2 ||
 			animType < tryAnimID) 
 		{
 			animCounter = 0f;
@@ -166,9 +190,24 @@ public class PlayerScript : MonoBehaviour
 		float adv = Time.deltaTime*6f;
 		byte oldFrame = spriteFrame;
 		switch(animType) {
-			case 0: //idle 0
-				spriteFrame = 0; 
+			case -2: //look down 14 15
+				spriteFrame = 15;
 				animCounter = 0f;
+			break;
+			case -1: //look up 13
+				spriteFrame = 13;
+				animCounter = 0f;
+			break;
+			case 0: //idle & blink 0
+				//spriteFrame = 0; 
+				//animCounter = 0f;
+				if(animCounter < 16f) {
+					spriteFrame = (byte)((byte)(animCounter/14f) >= 1 ? 12 : 0);
+					animCounter += adv;
+				}
+				else {
+					animCounter = 0f;
+				}
 			break;
 			case 1: //caminar 0, 1, 2, 3
 				if(animCounter < 4f) {

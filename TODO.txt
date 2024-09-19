@@ -1,0 +1,3 @@
+Tear Shooting without Mouse usage
+-> Looking up / down or crouching
+-> Animating & drawing eyes separatedly

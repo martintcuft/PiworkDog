@@ -392,15 +392,20 @@ MonoBehaviour:
   - {fileID: -106086310, guid: 02cb0c963f7e089419d2b435ebdc01e5, type: 3}
   - {fileID: -888503913, guid: 02cb0c963f7e089419d2b435ebdc01e5, type: 3}
   - {fileID: -444829420, guid: 02cb0c963f7e089419d2b435ebdc01e5, type: 3}
+  - {fileID: 464775947, guid: 02cb0c963f7e089419d2b435ebdc01e5, type: 3}
+  - {fileID: 1951759750, guid: 02cb0c963f7e089419d2b435ebdc01e5, type: 3}
+  - {fileID: 1051124462, guid: 02cb0c963f7e089419d2b435ebdc01e5, type: 3}
+  - {fileID: -1207534919, guid: 02cb0c963f7e089419d2b435ebdc01e5, type: 3}
   boxSize: {x: 0.8, y: 0.025}
   castDist: 0.50475
   floorLayer:
     serializedVersion: 2
     m_Bits: 128
+  coyoteTime: 7
   collectedPis: 0
   tearPrefab: {fileID: 8964384421398645581, guid: 3cf99a1f3afb1d04e8cc5b0eca4e93d8, type: 3}
   tearSpeed: 5
-  tearCD: 20
+  tearCD: 30
   particle_trans: {fileID: 3062829762357017435}
   walk_dust: {fileID: 5878364579413415121}
   jump_dust: {fileID: 4899956378950073066}
