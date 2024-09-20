@@ -10,6 +10,7 @@ public class UIMenuScript : MonoBehaviour
 	public GameObject menuFirst, optionsFirst, optionsExitTo, creditsFirst, creditsExitTo;
 	
     void Start() {
+		Time.timeScale = 1f;
 		if(isMainTitle) {
 			EventSystem.current.SetSelectedGameObject(null);
 			EventSystem.current.SetSelectedGameObject(menuFirst);
